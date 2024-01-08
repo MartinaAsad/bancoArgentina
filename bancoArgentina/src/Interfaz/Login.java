@@ -11,7 +11,7 @@ import java.awt.Color;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 
-public class login extends JFrame {
+public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -25,7 +25,7 @@ public class login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					login frame = new login();
+					Login frame = new Login();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -37,7 +37,7 @@ public class login extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public login() {
+	public Login() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 486, 374);
 		setTitle("Home Banking Banco Argentina");
