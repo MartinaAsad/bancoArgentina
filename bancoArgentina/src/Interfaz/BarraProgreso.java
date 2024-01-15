@@ -5,18 +5,27 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import BaseDeDatos.conexion;
+
 import javax.swing.JProgressBar;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 import javax.swing.ImageIcon;
 
 public class BarraProgreso extends JFrame {
-	
-	/*BUSCAR COMO PONER JTATTOO EN ECLIPSE*/
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
+	Connection conn;
+	ResultSet rs;
+	PreparedStatement pst;
+	
 
 	/**
 	 * Launch the application.
@@ -38,6 +47,7 @@ public class BarraProgreso extends JFrame {
 	 * Create the frame.
 	 */
 	public BarraProgreso() {
+		conn=conexion.metodo_conexion();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 321, 466);
 		contentPane = new JPanel();

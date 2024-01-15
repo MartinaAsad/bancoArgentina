@@ -5,23 +5,52 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import BaseDeDatos.conexion;
+
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.JButton;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textField;
-	private JTextField textField_1;
+	private JTextField ingresar_nroCuenta;
+	private JTextField ingresar_pin;
+	Connection conn;
+	ResultSet rs;
+	PreparedStatement pst;
 
 	/**
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
+		/*codigo para el jtattoo*/
+		   try {
+	           for(javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+	        	   UIManager.setLookAndFeel("com.jtattoo.plaf.smart.SmartLookAndFeel");	   
+	           }
+	        } catch (ClassNotFoundException ex) {
+	            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+	        } catch (InstantiationException ex) {
+	            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+	        } catch (IllegalAccessException ex) {
+	            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+	        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+	            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+	        }
+		   
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -32,12 +61,14 @@ public class Login extends JFrame {
 				}
 			}
 		});
+		
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public Login() {
+		conn=conexion.metodo_conexion();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 486, 374);
 		setTitle("Home Banking Banco Argentina");
@@ -53,36 +84,73 @@ public class Login extends JFrame {
 		titulo.setBounds(20, 22, 209, 24);
 		contentPane.add(titulo);
 		
-		JLabel lblNewLabel = new JLabel("Numero de cuenta:");
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblNewLabel.setBounds(83, 97, 143, 14);
-		contentPane.add(lblNewLabel);
+		JLabel text_nroCuenta = new JLabel("Numero de cuenta:");
+		text_nroCuenta.setFont(new Font("Arial", Font.PLAIN, 16));
+		text_nroCuenta.setBounds(83, 97, 143, 14);
+		contentPane.add(text_nroCuenta);
 		
-		JLabel lblNewLabel_1 = new JLabel("PIN:");
-		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblNewLabel_1.setBounds(83, 151, 46, 14);
-		contentPane.add(lblNewLabel_1);
+		JLabel texto_pin = new JLabel("PIN:");
+		texto_pin.setFont(new Font("Arial", Font.PLAIN, 16));
+		texto_pin.setBounds(83, 151, 46, 14);
+		contentPane.add(texto_pin);
 		
-		textField = new JTextField();
-		textField.setBounds(255, 96, 86, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		ingresar_nroCuenta = new JTextField();
+		ingresar_nroCuenta.setBounds(255, 96, 86, 20);
+		contentPane.add(ingresar_nroCuenta);
+		ingresar_nroCuenta.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setBounds(255, 150, 86, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		ingresar_pin = new JTextField();
+		ingresar_pin.setBounds(255, 150, 86, 20);
+		contentPane.add(ingresar_pin);
+		ingresar_pin.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Ingresar");
-		btnNewButton.setForeground(new Color(255, 255, 255));
-		btnNewButton.setBackground(new Color(0, 0, 0));
-		btnNewButton.setBounds(128, 235, 89, 23);
-		contentPane.add(btnNewButton);
+		JButton boton_ingresar = new JButton("Ingresar");
+		boton_ingresar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				/*consulta de bbdd que me permite traer los datos*/
+				String consulta="SELECT * FROM Cuenta WHERE nroCuenta = ? AND clave = ?";
+				try {
+					pst=conn.prepareStatement(consulta);
+					pst.setString(1, ingresar_nroCuenta.getText());//se obtiene el texto de lo ingresado como nro de cuenta por el usuario
+					pst.setString(2, ingresar_pin.getText());//se obtiene el texto de lo ingresado como pin por el usuario
+					rs=pst.executeQuery();
+					if (rs.next()) {//en caso de que los datos ingresados sean correctos
+						setVisible(false);
+						BarraProgreso bp=new BarraProgreso();
+						bp.setVisible(true);
+						rs.close();//se cierra
+						pst.close();//se cierra
+					}else {
+						JOptionPane.showMessageDialog(null, "numero de cuenta o pin incorrecto");
+					}
+				}catch(Exception ex){
+					JOptionPane.showMessageDialog(null, ex);
+				}finally {
+					try {
+						rs.close();
+						pst.close();
+					}catch(Exception exc) {
+						
+					}
+				}
+			}
+		});
+		boton_ingresar.setForeground(new Color(255, 255, 255));
+		boton_ingresar.setBackground(new Color(0, 0, 0));
+		boton_ingresar.setBounds(128, 235, 89, 23);
+		contentPane.add(boton_ingresar);
 		
-		JButton btnNewButton_1 = new JButton("Crear cuenta");
-		btnNewButton_1.setForeground(new Color(255, 255, 255));
-		btnNewButton_1.setBackground(new Color(0, 0, 0));
-		btnNewButton_1.setBounds(291, 235, 122, 23);
-		contentPane.add(btnNewButton_1);
+		JButton boton_crearcuenta = new JButton("Crear cuenta");
+		boton_crearcuenta.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				Cuenta c = new Cuenta();
+				c.setVisible(true);//se abre esta ventana para completar los datos
+			}
+		});
+		boton_crearcuenta.setForeground(new Color(255, 255, 255));
+		boton_crearcuenta.setBackground(new Color(0, 0, 0));
+		boton_crearcuenta.setBounds(291, 235, 122, 23);
+		contentPane.add(boton_crearcuenta);
 	}
 }

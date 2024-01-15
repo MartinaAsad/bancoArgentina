@@ -7,6 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.toedter.calendar.JDateChooser;
+
+import BaseDeDatos.conexion;
+
 import com.toedter.calendar.JCalendar;
 
 
@@ -20,6 +23,9 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.awt.event.ActionEvent;
 
 public class Cuenta extends JFrame {
@@ -31,6 +37,9 @@ public class Cuenta extends JFrame {
 	private JTextField ingresar_telefono;
 	private JTextField ingresar_dni;
 	private JTextField ingresar_cantidad;
+	Connection conn;
+	ResultSet rs;
+	PreparedStatement pst;
 
 	/**
 	 * Launch the application.
@@ -52,6 +61,7 @@ public class Cuenta extends JFrame {
 	 * Create the frame.
 	 */
 	public Cuenta() {
+		conn=conexion.metodo_conexion();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 713, 579);
 		setTitle("Informacion de la cuenta");
