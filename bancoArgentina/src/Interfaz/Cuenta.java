@@ -19,6 +19,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Cuenta extends JFrame {
 
@@ -27,7 +29,8 @@ public class Cuenta extends JFrame {
 	private JTextField nro_cuenta;
 	private JTextField textField;
 	private JTextField textField_1;
-	private JTextField textField_2;/*aca se selecciona la fecha desde un calendario*/
+	private JTextField textField_2;
+	private JTextField textField_3;
 
 	/**
 	 * Launch the application.
@@ -138,23 +141,45 @@ public class Cuenta extends JFrame {
 		JButton boton_crearcuenta = new JButton("Crear cuenta");
 		boton_crearcuenta.setForeground(new Color(255, 255, 255));
 		boton_crearcuenta.setBackground(new Color(0, 0, 0));
-		boton_crearcuenta.setBounds(162, 290, 134, 23);
+		boton_crearcuenta.setBounds(162, 340, 134, 23);
 		contentPane.add(boton_crearcuenta);
 
 		JButton boton_volver = new JButton("Volver");
+		boton_volver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+				Login c = new Login();
+				c.setVisible(true);
+			}
+		});
 		boton_volver.setForeground(new Color(255, 255, 255));
 		boton_volver.setBackground(new Color(0, 0, 0));
-		boton_volver.setBounds(380, 290, 89, 23);
+		boton_volver.setBounds(375, 340, 89, 23);
 		contentPane.add(boton_volver);
 
 		JButton boton_limpiar = new JButton("Limpiar campos");
+		boton_limpiar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
 		boton_limpiar.setForeground(new Color(255, 255, 255));
 		boton_limpiar.setBackground(new Color(0, 0, 0));
-		boton_limpiar.setBounds(551, 290, 146, 23);
+		boton_limpiar.setBounds(551, 340, 146, 23);
 		contentPane.add(boton_limpiar);
 
 		JDateChooser fecha_nacimiento = new JDateChooser();
 		fecha_nacimiento.setBounds(567, 73, 70, 20);
 		contentPane.add(fecha_nacimiento);
+		
+		JLabel lblNewLabel = new JLabel("Cantidad de dinero:");
+		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+		lblNewLabel.setBounds(10, 239, 164, 14);
+		contentPane.add(lblNewLabel);
+		
+		textField_3 = new JTextField();
+		textField_3.setColumns(10);
+		textField_3.setBounds(172, 238, 144, 20);
+		contentPane.add(textField_3);
 	}
 }
