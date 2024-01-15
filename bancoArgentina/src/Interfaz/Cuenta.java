@@ -27,10 +27,10 @@ public class Cuenta extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
 	private JTextField nro_cuenta;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+	private JTextField ingresar_nombre;
+	private JTextField ingresar_telefono;
+	private JTextField ingresar_dni;
+	private JTextField ingresar_cantidad;
 
 	/**
 	 * Launch the application.
@@ -116,27 +116,27 @@ public class Cuenta extends JFrame {
 		contentPane.add(opcion_femenino);
 
 		JRadioButton opcion_masculino = new JRadioButton("Masculino");
-		opcion_masculino.setBounds(263, 111, 71, 23);
+		opcion_masculino.setBounds(263, 111, 97, 23);
 		contentPane.add(opcion_masculino);
 
 		JTextArea direccion = new JTextArea();
 		direccion.setBounds(172, 148, 162, 44);
 		contentPane.add(direccion);
 
-		textField = new JTextField();
-		textField.setBounds(477, 32, 144, 20);
-		contentPane.add(textField);
-		textField.setColumns(10);/*se agrega el calendario al panel*/
+		ingresar_nombre = new JTextField();
+		ingresar_nombre.setBounds(477, 32, 144, 20);
+		contentPane.add(ingresar_nombre);
+		ingresar_nombre.setColumns(10);/*se agrega el calendario al panel*/
 
-		textField_1 = new JTextField();
-		textField_1.setBounds(474, 112, 84, 20);
-		contentPane.add(textField_1);
-		textField_1.setColumns(10);
+		ingresar_telefono = new JTextField();
+		ingresar_telefono.setBounds(474, 112, 84, 20);
+		contentPane.add(ingresar_telefono);
+		ingresar_telefono.setColumns(10);
 
-		textField_2 = new JTextField();
-		textField_2.setBounds(474, 150, 86, 20);
-		contentPane.add(textField_2);
-		textField_2.setColumns(10);
+		ingresar_dni = new JTextField();
+		ingresar_dni.setBounds(474, 150, 86, 20);
+		contentPane.add(ingresar_dni);
+		ingresar_dni.setColumns(10);
 
 		JButton boton_crearcuenta = new JButton("Crear cuenta");
 		boton_crearcuenta.setForeground(new Color(255, 255, 255));
@@ -160,6 +160,17 @@ public class Cuenta extends JFrame {
 		JButton boton_limpiar = new JButton("Limpiar campos");
 		boton_limpiar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/*	private JTextField nro_cuenta;
+	private JTextField ingresar_nombre;
+	private JTextField ingresar_telefono;
+	private JTextField ingresar_dni;
+	private JTextField ingresar_cantidad;*/
+				nro_cuenta.setText("");
+				ingresar_nombre.setText("");
+				ingresar_telefono.setText("");
+				ingresar_dni.setText("");
+				ingresar_cantidad.setText("");
+				
 				
 			}
 		});
@@ -172,14 +183,14 @@ public class Cuenta extends JFrame {
 		fecha_nacimiento.setBounds(567, 73, 70, 20);
 		contentPane.add(fecha_nacimiento);
 		
-		JLabel lblNewLabel = new JLabel("Cantidad de dinero:");
-		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 16));
-		lblNewLabel.setBounds(10, 239, 164, 14);
-		contentPane.add(lblNewLabel);
+		JLabel texto_cantidad = new JLabel("Cantidad de dinero:");
+		texto_cantidad.setFont(new Font("Arial", Font.PLAIN, 16));
+		texto_cantidad.setBounds(10, 239, 164, 14);
+		contentPane.add(texto_cantidad);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
-		textField_3.setBounds(172, 238, 144, 20);
-		contentPane.add(textField_3);
+		ingresar_cantidad = new JTextField();
+		ingresar_cantidad.setColumns(10);
+		ingresar_cantidad.setBounds(172, 238, 144, 20);
+		contentPane.add(ingresar_cantidad);
 	}
 }
