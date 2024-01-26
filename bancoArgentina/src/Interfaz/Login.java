@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+
 import BaseDeDatos.conexion;
 
 import javax.swing.JLabel;
@@ -20,6 +21,8 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 
 public class Login extends JFrame {
@@ -28,9 +31,11 @@ public class Login extends JFrame {
 	private JPanel contentPane;
 	private JTextField ingresar_nroCuenta;
 	private JTextField ingresar_pin;
-	Connection conn;
-	ResultSet rs;
-	PreparedStatement pst;
+	/*necesario para la conexion*/
+	conexion c= new conexion();
+	Connection conn=null;
+	Statement stmt=null;
+	final ResultSet rs=null;/*aca se asigna el resultado de la consulta*/
 
 	/**
 	 * Launch the application.
@@ -68,7 +73,9 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
-		conn=conexion.metodo_conexion();
+		final ResultSet rs = null;
+		PreparedStatement pst;
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 486, 374);
 		setTitle("Home Banking Banco Argentina");
@@ -108,32 +115,25 @@ public class Login extends JFrame {
 		boton_ingresar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				/*consulta de bbdd que me permite traer los datos*/
-				String consulta="SELECT * FROM Cuenta WHERE nroCuenta = ? AND clave = ?";
+				//String consulta="SELECT * FROM Cuenta WHERE nroCuenta = ? AND clave = ?";
+				String consulta="SELECT * FROM Cuenta";
 				try {
-					pst=conn.prepareStatement(consulta);
-					pst.setString(1, ingresar_nroCuenta.getText());//se obtiene el texto de lo ingresado como nro de cuenta por el usuario
-					pst.setString(2, ingresar_pin.getText());//se obtiene el texto de lo ingresado como pin por el usuario
-					rs=pst.executeQuery();
-					if (rs.next()) {//en caso de que los datos ingresados sean correctos
-						setVisible(false);
-						BarraProgreso bp=new BarraProgreso();
-						bp.setVisible(true);
-						rs.close();//se cierra
-						pst.close();//se cierra
-					}else {
-						JOptionPane.showMessageDialog(null, "numero de cuenta o pin incorrecto");
-					}
-				}catch(Exception ex){
-					JOptionPane.showMessageDialog(null, ex);
-				}finally {
-					try {
-						rs.close();
-						pst.close();
-					}catch(Exception exc) {
+					conn=c.metodo_conexion();
+					stmt=conn.createStatement();
+					final ResultSet rsFinal = rs; // Declara rs como final
+					rs=stmt.executeQuery(consulta);
+					/*el while es de prueba*/
+					
+					while(rsFinal.next()) {
+						int nroCuenta=rsFinal.getInt(1);//solo trae la rimera columna
+						String tipoCuenta=rsFinal.getString(2);
 						
+						System.out.println(nroCuenta+" "+tipoCuenta);
 					}
+				}catch(SQLException e2) {
+					e2.printStackTrace();
 				}
-			}
+				}
 		});
 		boton_ingresar.setForeground(new Color(255, 255, 255));
 		boton_ingresar.setBackground(new Color(0, 0, 0));
