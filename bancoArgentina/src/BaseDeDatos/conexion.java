@@ -1,21 +1,32 @@
 package BaseDeDatos;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import javax.swing.JOptionPane;
 
 public class conexion {
 	Connection conn=null;
-				//el connection se importa
-	public static Connection metodo_conexion() {
+	static {
 		try {
-			Class.forName("org.sqlite.JDBC");
-			/*ubicacion de la base de datos a utilizar*/
-			Connection conn=DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Martina\\git\\bancoArgentina\\bancoArgentina\\src\\BancoArgentina.db");
-			return conn;
-		}catch(Exception e) {
-			JOptionPane.showMessageDialog(null, e);
+			Class.forName("com.mysql.cj.jdbc.Driver");
+			
+		}catch(ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+	}
+	
+				//el connection se importa
+	public Connection metodo_conexion() {
+		try {
+			/*jdbc:mysql://host:puerto/base, "usuario", "contraseña"*/
+			conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/bancoargentina","root","");
+			//System.out.println("todo funciona");
+		}catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, e);
+		} 
 		
-		return null;
+		return conn;
 	}
 }
