@@ -149,6 +149,7 @@ public class Cuenta extends JFrame {
 		contentPane.add(ingresar_dni);
 		ingresar_dni.setColumns(10);
 		
+		
 		JButton boton_crearcuenta = new JButton("Crear cuenta");
 		boton_crearcuenta.addActionListener(new ActionListener() {
 			@Override
@@ -158,12 +159,15 @@ public class Cuenta extends JFrame {
 						+ " direccionCliente, dineroDisponible, fechaNacimiento, nombreCliente, telefonoCliente, dniCliente, pin)"
 						+ "VALUES (?,?,?,?,?,?,?,?,?)";
 				
-				java.util.Date fechaCasteo=null;
 				/*obtengo lo ingresado en el textfield y lo almaceno en variables, hago casteos de ser necesario*/
 				String direccionTexto=direccion.getText();
 				double cantidad=Double.parseDouble(ingresar_cantidad.getText());
 				String nombreCliente=ingresar_nombre.getText();
 				String fechaNacimiento=((JTextField)fecha_nacimiento.getDateEditor().getUiComponent()).getText();
+				int telefono=Integer.parseInt(ingresar_telefono.getText());
+				int dni=Integer.parseInt(ingresar_dni.getText());
+				int pin=Integer.parseInt(ingresar_pin.getText());
+				java.util.Date fechaCasteo=null;
 				//Date fecha_casteo=Date.valueOf(fechaNacimiento);
 				
 				/*formatear la fecha segun date mysql*/
@@ -185,9 +189,6 @@ public class Cuenta extends JFrame {
 				    e2.printStackTrace();
 				}
 		        
-				int telefono=Integer.parseInt(ingresar_telefono.getText());
-				int dni=Integer.parseInt(ingresar_dni.getText());
-				int pin=Integer.parseInt(ingresar_pin.getText());
 				
 				PreparedStatement stmt = null;
 				ResultSet resultSet = null;
@@ -251,10 +252,6 @@ public class Cuenta extends JFrame {
 		boton_limpiar.setBackground(new Color(0, 0, 0));
 		boton_limpiar.setBounds(551, 340, 146, 23);
 		contentPane.add(boton_limpiar);
-
-		/*JDateChooser fecha_nacimiento = new JDateChooser();
-		fecha_nacimiento.setBounds(567, 73, 70, 20);
-		contentPane.add(fecha_nacimiento);*/
 		
 		JLabel texto_cantidad = new JLabel("Cantidad de dinero:");
 		texto_cantidad.setFont(new Font("Arial", Font.PLAIN, 16));
@@ -276,15 +273,42 @@ public class Cuenta extends JFrame {
 		contentPane.add(ingresar_pin);
 		ingresar_pin.setColumns(10);
 	}
+	
+	public void obtener_nroCuenta(String tipo, int dni) {
+		String query = "SELECT nroCuenta FROM cuenta WHERE tipoCuenta = ? AND dniCliente = ?";
+	    
+	    try (PreparedStatement stmt = conexion.prepareStatement(query)) {
+	        stmt.setString(1, tipo);
+	        stmt.setInt(2, dni);
+
+	        try (ResultSet resultSet = stmt.executeQuery()) {
+	            if (resultSet.next()) {
+	                int nroCuenta = resultSet.getInt("nroCuenta");
+	                JOptionPane.showMessageDialog(null, "Número de cuenta: " + nroCuenta);
+	            } else {
+	                JOptionPane.showMessageDialog(null, "No se encontró la cuenta.");
+	            }
+	        }
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    }
+		
+		
+	}
 	public void insertarBalance() {
-		String query="INSERT INTO Balances(nombreCliente, totalDisponible) VALUES (?,?)";//consulta que inserta datos
+		String query="INSERT INTO Balances(nombreCliente, totalDisponible) VALUES (?,?) WHERE nroCuenta = ?";//consulta que inserta datos
 		PreparedStatement stmt = null;
         ResultSet resultSet = null;
+      
+		double cantidad=Double.parseDouble(ingresar_cantidad.getText());
+		String nombreCliente=ingresar_nombre.getText();
+		
 		try {
 			stmt=conexion.prepareStatement(query);
 			//stmt.setInt(1, Integer.parseInt(nro_cuenta.getText()));
-			stmt.setString(2, ingresar_nombre.getText());
-			stmt.setDouble(3, Double.parseDouble(ingresar_cantidad.getText()));
+			stmt.setString(1, nombreCliente);
+			stmt.setDouble(2, cantidad);
+			//stmt.setInt(3, nro);//se inserta el parametro
 			
 			stmt.executeUpdate();
 			stmt.close();
