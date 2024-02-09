@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d7744dc4-a563-4078-ac68-278ddb03d232" name="Changes" comment="" />
+    <list default="true" id="d7744dc4-a563-4078-ac68-278ddb03d232" name="Changes" comment="todos los metodos de la seccion perfil funcionan, falta ver como hacer que se visualice la fecha">
+      <change afterPath="$PROJECT_DIR$/bancoArgentina/src/drivers/mysql-connector-j-8.3.0.jar" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/bancoArgentina/.classpath" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/out/production/bancoArgentina/.project" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bancoArgentina/src/Interfaz/PaginaInicio.java" beforeDir="false" afterPath="$PROJECT_DIR$/bancoArgentina/src/Interfaz/PaginaInicio.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -9,6 +14,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "MartinaAsad"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="14f7407e-05a9-4f40-a4f1-34f51aaa3203" />
+        <option name="url" value="https://github.com/MartinaAsad/bancoArgentina.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -22,7 +41,7 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "Merging master",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "C:/Users/Martina/OneDrive/Documentos/GitHub/bancoArgentina"
   }
@@ -35,6 +54,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
+        <option value="jdk-11.0.16-jbr_dcevm-11.0.16-4caba194b151-788636e5" />
         <option value="jdk-17.0.9-corretto-17.0.9-f644763e9732-ebaef533" />
       </set>
     </attachedChunks>
@@ -48,6 +68,19 @@
       <option name="presentableId" value="Default" />
       <updated>1704329209302</updated>
     </task>
+    <task id="LOCAL-00001" summary="todos los metodos de la seccion perfil funcionan, falta ver como hacer que se visualice la fecha">
+      <option name="closed" value="true" />
+      <created>1707356569953</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1707356569953</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="todos los metodos de la seccion perfil funcionan, falta ver como hacer que se visualice la fecha" />
+    <option name="LAST_COMMIT_MESSAGE" value="todos los metodos de la seccion perfil funcionan, falta ver como hacer que se visualice la fecha" />
   </component>
 </project>
