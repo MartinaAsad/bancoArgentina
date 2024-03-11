@@ -2,16 +2,13 @@ package Interfaz;
 
 import java.awt.EventQueue;
 import java.sql.Connection;
-<<<<<<< HEAD
 import java.util.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-=======
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
->>>>>>> origin/master
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,11 +16,8 @@ import javax.swing.border.EmptyBorder;
 
 import BaseDeDatos.conexion;
 import javax.swing.JLabel;
-<<<<<<< HEAD
 import javax.swing.JOptionPane;
 
-=======
->>>>>>> origin/master
 import java.awt.Font;
 import javax.swing.JTextField;
 import javax.swing.JTabbedPane;
@@ -32,7 +26,6 @@ import java.util.GregorianCalendar;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-<<<<<<< HEAD
 import javax.swing.ImageIcon;
 
 public class PaginaInicio extends JFrame {
@@ -56,7 +49,6 @@ public class PaginaInicio extends JFrame {
     private JTextField depositos_cantdepositar;
     private JTextField depositos_usuario;
     private JTextField depositos_total;
-=======
 
 public class PaginaInicio extends JFrame {
 
@@ -70,12 +62,10 @@ public class PaginaInicio extends JFrame {
 	private JTextField telefono;
 	private JTextField fechaNacimiento;
 	private JTextField fecha_actual;
->>>>>>> origin/master
 	/*Connection conn;
 	ResultSet rs;
 	PreparedStatement pst;*/
 
-<<<<<<< HEAD
     /**
      * Launch the application.
      */
@@ -374,7 +364,6 @@ public class PaginaInicio extends JFrame {
                     stmt.setString(1, usuario_logueado.getText());
                     resultSet=stmt.executeQuery();
 					/*nombre.setEditable(true);
-=======
 	/**
 	 * Launch the application.
 	 */
@@ -503,12 +492,10 @@ public class PaginaInicio extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				/*habilitar los campos para editarlos*/
 				nombre.setEditable(true);
->>>>>>> origin/master
 				genero.setEditable(true);
 				dni.setEditable(true);
 				direccion.setEditable(true);
 				telefono.setEditable(true);
-<<<<<<< HEAD
 				fechaNacimiento.setEditable(true);*/
                     if(resultSet.next()) {
                         String nombreObtenido=resultSet.getString("nombreCliente");//aca obtengo el nombre del cliente logueado
@@ -563,7 +550,6 @@ public class PaginaInicio extends JFrame {
 
     }
 }
-=======
 				fechaNacimiento.setEditable(true);
 				
 			}
@@ -624,4 +610,3 @@ public class PaginaInicio extends JFrame {
 		
 	}
 }
->>>>>>> origin/master
