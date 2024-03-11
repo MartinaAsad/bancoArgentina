@@ -42,6 +42,11 @@ public class PaginaInicio extends JFrame {
     /*necesario para la conexion*/
     conexion con =  new conexion();
     Connection conexion = con.metodo_conexion();
+    private JTextField depositos_nrocuenta;
+    private JTextField depositos_nombreusuario;
+    private JTextField depositos_cantdepositar;
+    private JTextField depositos_usuario;
+    private JTextField depositos_total;
 	/*Connection conn;
 	ResultSet rs;
 	PreparedStatement pst;*/
@@ -168,12 +173,8 @@ public class PaginaInicio extends JFrame {
         boton_editar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 /*habilitar los campos para editarlos*/
-				/*nombre.setEditable(true);
-				genero.setEditable(true);
-				dni.setEditable(true);*/
                 direccion.setEditable(true);
                 telefono.setEditable(true);
-                /*fechaNacimiento.setEditable(true);*/
 
             }
         });
@@ -206,6 +207,94 @@ public class PaginaInicio extends JFrame {
         JPanel depositos = new JPanel();
         opciones.addTab("Depositos", null, depositos, null);
         depositos.setLayout(null);
+
+        JLabel texto_nombre_deposito = new JLabel("Nombre del usuario a depositar:");
+        texto_nombre_deposito.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_nombre_deposito.setBounds(41, 207, 228, 19);
+        depositos.add(texto_nombre_deposito);
+
+        JLabel texto_depositos_nrocuenta = new JLabel("Numero de cuenta:");
+        texto_depositos_nrocuenta.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_depositos_nrocuenta.setBounds(41, 101, 153, 14);
+        depositos.add(texto_depositos_nrocuenta);
+
+        JLabel texto_depositos_cantidad = new JLabel("Cantidad a depositar:");
+        texto_depositos_cantidad.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_depositos_cantidad.setBounds(41, 169, 228, 27);
+        depositos.add(texto_depositos_cantidad);
+
+        depositos_nrocuenta = new JTextField();
+        depositos_nrocuenta.setEditable(false);
+        depositos_nrocuenta.setBounds(314, 95, 122, 20);
+        depositos.add(depositos_nrocuenta);
+        depositos_nrocuenta.setColumns(10);
+
+        depositos_nombreusuario = new JTextField();
+        depositos_nombreusuario.setBounds(314, 164, 122, 20);
+        depositos.add(depositos_nombreusuario);
+        depositos_nombreusuario.setColumns(10);
+
+        depositos_cantdepositar = new JTextField();
+        depositos_cantdepositar.setBounds(314, 195, 122, 20);
+        depositos.add(depositos_cantdepositar);
+        depositos_cantdepositar.setColumns(10);
+
+        JButton depositos_boton_depositar = new JButton("Depositar");
+        depositos_boton_depositar.setBounds(451, 267, 89, 23);
+        depositos.add(depositos_boton_depositar);
+
+        JLabel texto_depositos_usuario = new JLabel("Usuario:");
+        texto_depositos_usuario.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_depositos_usuario.setBounds(41, 63, 105, 14);
+        depositos.add(texto_depositos_usuario);
+
+        depositos_usuario = new JTextField();
+        depositos_usuario.setBounds(314, 57, 122, 20);
+        depositos.add(depositos_usuario);
+        depositos_usuario.setColumns(10);
+
+        JLabel texto_depositos_total = new JLabel("Total disponible:");
+        texto_depositos_total.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_depositos_total.setBounds(41, 139, 133, 19);
+        depositos.add(texto_depositos_total);
+
+        depositos_total = new JTextField();
+        depositos_total.setEditable(false);
+        depositos_total.setBounds(314, 133, 122, 20);
+        depositos.add(depositos_total);
+        depositos_total.setColumns(10);
+
+        JButton depositos_buscarUsuario = new JButton("");
+        depositos_buscarUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                String sql="SELECT * FROM balances WHERE nombreCliente = ?";
+                try {
+                    stmt=conexion.prepareStatement(sql);
+                    stmt.setString(1, depositos_nombreusuario.getText());
+                    resultSet=stmt.executeQuery();
+                    if(resultSet.next()) {
+                        /*obtengo los valores y los seteo*/
+                        String nroCuenta=Integer.toString(resultSet.getInt(2));
+                        String totalDisponible=Double.toString(resultSet.getDouble(4));
+                        depositos_nrocuenta.setEnabled(true);
+                        depositos_nrocuenta.setText(nroCuenta);
+                        depositos_total.setEnabled(true);
+                        depositos_total.setText(totalDisponible);
+                        resultSet.close();
+                        stmt.close();
+                    }else {
+                        JOptionPane.showMessageDialog(null, "usuario no encontrado");
+                    }
+                }catch(Exception e2) {
+                    JOptionPane.showMessageDialog(null, e2);
+                }
+            }
+        });
+        depositos_buscarUsuario.setIcon(new ImageIcon("C:\\Users\\Martina\\Downloads\\3721746 (2).png"));
+        depositos_buscarUsuario.setBounds(464, 33, 41, 44);
+        depositos.add(depositos_buscarUsuario);
 
         JPanel transferencias = new JPanel();
         opciones.addTab("Tranferencias", null, transferencias, null);
@@ -317,3 +406,4 @@ public class PaginaInicio extends JFrame {
 
 
     }
+}
