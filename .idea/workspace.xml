@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d7744dc4-a563-4078-ac68-278ddb03d232" name="Changes" comment="agregue el boton de busca en la solapa Depositos">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="d7744dc4-a563-4078-ac68-278ddb03d232" name="Changes" comment="termine la solapa Depositos">
       <change beforePath="$PROJECT_DIR$/bancoArgentina/src/Interfaz/PaginaInicio.java" beforeDir="false" afterPath="$PROJECT_DIR$/bancoArgentina/src/Interfaz/PaginaInicio.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -93,12 +92,21 @@
       <option name="project" value="LOCAL" />
       <updated>1710119933039</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="termine la solapa Depositos">
+      <option name="closed" value="true" />
+      <created>1710458609118</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1710458609118</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="todos los metodos de la seccion perfil funcionan, falta ver como hacer que se visualice la fecha" />
     <MESSAGE value="agregue el boton de busca en la solapa Depositos" />
-    <option name="LAST_COMMIT_MESSAGE" value="agregue el boton de busca en la solapa Depositos" />
+    <MESSAGE value="termine la solapa Depositos" />
+    <option name="LAST_COMMIT_MESSAGE" value="termine la solapa Depositos" />
   </component>
 </project>

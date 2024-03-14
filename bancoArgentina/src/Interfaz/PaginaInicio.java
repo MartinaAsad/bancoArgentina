@@ -312,6 +312,91 @@ public class PaginaInicio extends JFrame {
         opciones.addTab("Tranferencias", null, transferencias, null);
         transferencias.setLayout(null);
 
+        JLabel texto_transferencia_usuario = new JLabel("Usuario a transferir:");
+        texto_transferencia_usuario.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_transferencia_usuario.setBounds(43, 45, 199, 14);
+        transferencias.add(texto_transferencia_usuario);
+
+        JLabel texto_transferencia_nrocuenta = new JLabel("Numero de cuenta a transferir:");
+        texto_transferencia_nrocuenta.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_transferencia_nrocuenta.setBounds(43, 90, 227, 14);
+        transferencias.add(texto_transferencia_nrocuenta);
+
+        JLabel texto_transferencia_total = new JLabel("Total disponible:");
+        texto_transferencia_total.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_transferencia_total.setBounds(43, 143, 133, 19);
+        transferencias.add(texto_transferencia_total);
+
+        JLabel texto_transferencia_cantidad = new JLabel("Cantidad a transferir:");
+        texto_transferencia_cantidad.setFont(new Font("Arial", Font.PLAIN, 16));
+        texto_transferencia_cantidad.setBounds(42, 182, 228, 27);
+        transferencias.add(texto_transferencia_cantidad);
+
+        JButton transferencia_buscarUsuario = new JButton("");/*chequear*/
+        transferencia_buscarUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                String sql="SELECT * FROM balances WHERE nombreCliente = ?";
+                try {
+                    stmt=conexion.prepareStatement(sql);
+                    stmt.setString(1, transferencia_usuario.getText());
+                    resultSet=stmt.executeQuery();
+                    if(resultSet.next()) {
+                        /*obtengo los valores y los seteo*/
+                        String nroCuenta=Integer.toString(resultSet.getInt(2));
+                        String totalDisponible=Double.toString(resultSet.getDouble(4));
+                        transferencia_nroCuenta.setEnabled(true);
+                        transferencia_nroCuenta.setText(nroCuenta);
+                        transferencia_total.setEnabled(true);
+                        transferencia_total.setText(totalDisponible);
+                        resultSet.close();
+                        stmt.close();
+                    }else {
+                        JOptionPane.showMessageDialog(null, "usuario no encontrado");
+                    }
+                }catch(Exception e2) {
+                    JOptionPane.showMessageDialog(null, e2);
+                }
+                try {
+
+
+                }catch(Exception e2) {
+                    JOptionPane.showMessageDialog(null, e2);
+                }
+
+            }
+        });
+        transferencia_buscarUsuario.setIcon(new ImageIcon("C:\\Users\\Martina\\Downloads\\3721746 (2).png"));
+        transferencia_buscarUsuario.setBounds(473, 26, 41, 44);
+        transferencias.add(transferencia_buscarUsuario);
+
+        JButton transferencia_transferir = new JButton("Tranferir");
+        transferencia_transferir.setBounds(465, 244, 89, 23);
+        transferencias.add(transferencia_transferir);
+
+        transferencia_usuario = new JTextField();
+        transferencia_usuario.setBounds(301, 44, 133, 20);
+        transferencias.add(transferencia_usuario);
+        transferencia_usuario.setColumns(10);
+
+        transferencia_nroCuenta = new JTextField();
+        transferencia_nroCuenta.setEditable(false);
+        transferencia_nroCuenta.setColumns(10);
+        transferencia_nroCuenta.setBounds(301, 89, 133, 20);
+        transferencias.add(transferencia_nroCuenta);
+
+        transferencia_total = new JTextField();
+        transferencia_total.setEditable(false);
+        transferencia_total.setBounds(301, 144, 133, 20);
+        transferencias.add(transferencia_total);
+        transferencia_total.setColumns(10);
+
+        transferencia_cantidad = new JTextField();
+        transferencia_cantidad.setBounds(301, 187, 133, 20);
+        transferencias.add(transferencia_cantidad);
+        transferencia_cantidad.setColumns(10);
+
         JPanel retiros = new JPanel();
         opciones.addTab("Retiros", null, retiros, null);
         retiros.setLayout(null);
@@ -426,4 +511,3 @@ public class PaginaInicio extends JFrame {
         depositos_usuario.setText("");
 
     }
-}
