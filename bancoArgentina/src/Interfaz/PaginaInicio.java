@@ -46,6 +46,9 @@ public class PaginaInicio extends JFrame {
     private JTextField depositos_cantdepositar;
     private JTextField depositos_usuario;
     private JTextField depositos_total;
+    private JTextField transferencia_usuario;
+    private JTextField transferencia_nroCuenta;
+    private JTextField transferencia_cantidad;
 	/*Connection conn;
 	ResultSet rs;
 	PreparedStatement pst;*/
@@ -228,7 +231,7 @@ public class PaginaInicio extends JFrame {
         depositos.add(depositos_cantdepositar);
         depositos_cantdepositar.setColumns(10);
 
-        JButton depositos_boton_depositar = new JButton("Depositar");/*chequear*/
+        JButton depositos_boton_depositar = new JButton("Depositar");
         depositos_boton_depositar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -322,17 +325,12 @@ public class PaginaInicio extends JFrame {
         texto_transferencia_nrocuenta.setBounds(43, 90, 227, 14);
         transferencias.add(texto_transferencia_nrocuenta);
 
-        JLabel texto_transferencia_total = new JLabel("Total disponible:");
-        texto_transferencia_total.setFont(new Font("Arial", Font.PLAIN, 16));
-        texto_transferencia_total.setBounds(43, 143, 133, 19);
-        transferencias.add(texto_transferencia_total);
-
         JLabel texto_transferencia_cantidad = new JLabel("Cantidad a transferir:");
         texto_transferencia_cantidad.setFont(new Font("Arial", Font.PLAIN, 16));
-        texto_transferencia_cantidad.setBounds(42, 182, 228, 27);
+        texto_transferencia_cantidad.setBounds(42, 139, 228, 27);
         transferencias.add(texto_transferencia_cantidad);
 
-        JButton transferencia_buscarUsuario = new JButton("");/*chequear*/
+        JButton transferencia_buscarUsuario = new JButton("");
         transferencia_buscarUsuario.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 PreparedStatement stmt = null;
@@ -345,11 +343,11 @@ public class PaginaInicio extends JFrame {
                     if(resultSet.next()) {
                         /*obtengo los valores y los seteo*/
                         String nroCuenta=Integer.toString(resultSet.getInt(2));
-                        String totalDisponible=Double.toString(resultSet.getDouble(4));
+                        /*String totalDisponible=Double.toString(resultSet.getDouble(4));*/
                         transferencia_nroCuenta.setEnabled(true);
                         transferencia_nroCuenta.setText(nroCuenta);
-                        transferencia_total.setEnabled(true);
-                        transferencia_total.setText(totalDisponible);
+						/*transferencia_total.setEnabled(true);
+						transferencia_total.setText(totalDisponible);*/
                         resultSet.close();
                         stmt.close();
                     }else {
@@ -372,7 +370,15 @@ public class PaginaInicio extends JFrame {
         transferencias.add(transferencia_buscarUsuario);
 
         JButton transferencia_transferir = new JButton("Tranferir");
-        transferencia_transferir.setBounds(465, 244, 89, 23);
+        transferencia_transferir.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                transferir();
+                //verificarSaldo();
+
+            }
+
+        });
+        transferencia_transferir.setBounds(460, 215, 89, 23);
         transferencias.add(transferencia_transferir);
 
         transferencia_usuario = new JTextField();
@@ -386,14 +392,8 @@ public class PaginaInicio extends JFrame {
         transferencia_nroCuenta.setBounds(301, 89, 133, 20);
         transferencias.add(transferencia_nroCuenta);
 
-        transferencia_total = new JTextField();
-        transferencia_total.setEditable(false);
-        transferencia_total.setBounds(301, 144, 133, 20);
-        transferencias.add(transferencia_total);
-        transferencia_total.setColumns(10);
-
         transferencia_cantidad = new JTextField();
-        transferencia_cantidad.setBounds(301, 187, 133, 20);
+        transferencia_cantidad.setBounds(301, 144, 133, 20);
         transferencias.add(transferencia_cantidad);
         transferencia_cantidad.setColumns(10);
 
@@ -511,3 +511,57 @@ public class PaginaInicio extends JFrame {
         depositos_usuario.setText("");
 
     }
+
+    public void transferir() {/*empezar video 18 y chequear este metodo*/
+        //logueado es el usuario que realiza la transferencia y de donde se descuentan los fonods
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+
+        String cantTransferir=transferencia_cantidad.getText();
+        double casteoTransferir=Double.parseDouble(cantTransferir);
+        double cantidadDisponibleActualTranferir=0;
+        String nombreClienteAtransferir=transferencia_usuario.getText();
+        double cantidadDisponiblePrevioUsuarioTranferir=0;
+
+        double cantidadDisponibleActualLogueado=0;
+        String clienteLogueado=usuario_logueado.getText();
+        double cantidadDisponiblePrevioUsuarioLogueado=0;
+
+
+        String verificarDisponibilidadLogueado="SELECT totalDisponible FROM balances WHERE nombreCliente = ?";
+        String nuevoSaldoLogueado="UPDATE totalDisponible FROM balances set TotalDisponible = ? WHERE nombreCliente = ?";
+
+        String verificarDisponibilidadTranferir="SELECT totalDisponible FROM balances WHERE nombreCliente = ?";
+        String nuevoSaldoTransferir="UPDATE totalDisponible FROM balances set TotalDisponible = ? WHERE nombreCliente = ?";
+
+        try {
+            stmt=conexion.prepareStatement(verificarDisponibilidadLogueado);
+            stmt.setString(1, clienteLogueado);
+            resultSet=stmt.executeQuery();
+
+            if(resultSet.next()) {
+                cantidadDisponiblePrevioUsuarioLogueado=resultSet.getDouble(1);
+                stmt.close();
+                if(cantidadDisponiblePrevioUsuarioLogueado<=casteoTransferir) {
+                    System.out.println("no se puede transferir el monto");
+                }else {
+                    System.out.println("se puede transferir el monto");
+                    stmt=conexion.prepareStatement(verificarDisponibilidadTranferir);
+                    stmt.setString(1, nombreClienteAtransferir);
+                    resultSet=stmt.executeQuery();
+                    if(resultSet.next()) {
+                        cantidadDisponibleActualTranferir=resultSet.getDouble(1);
+                        System.out.println(cantidadDisponibleActualTranferir);
+                    }
+                }
+            }
+
+
+        }catch(Exception e) {
+            System.out.println(e);
+        }
+
+
+    }
+
+}
