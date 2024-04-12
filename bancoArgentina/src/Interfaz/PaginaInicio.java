@@ -512,10 +512,11 @@ public class PaginaInicio extends JFrame {
 
     }
 
-    public void transferir() {/*empezar video 18 y chequear este metodo*/
+    public void transferir() {
         //logueado es el usuario que realiza la transferencia y de donde se descuentan los fonods
         PreparedStatement stmt = null;
         ResultSet resultSet = null;
+        int cantFilas=0;
 
         String cantTransferir=transferencia_cantidad.getText();
         double casteoTransferir=Double.parseDouble(cantTransferir);
@@ -529,10 +530,10 @@ public class PaginaInicio extends JFrame {
 
 
         String verificarDisponibilidadLogueado="SELECT totalDisponible FROM balances WHERE nombreCliente = ?";
-        String nuevoSaldoLogueado="UPDATE totalDisponible FROM balances set TotalDisponible = ? WHERE nombreCliente = ?";
+        String nuevoSaldoLogueado="UPDATE balances SET TotalDisponible = ? WHERE nombreCliente = ?";
 
         String verificarDisponibilidadTranferir="SELECT totalDisponible FROM balances WHERE nombreCliente = ?";
-        String nuevoSaldoTransferir="UPDATE totalDisponible FROM balances set TotalDisponible = ? WHERE nombreCliente = ?";
+        String nuevoSaldoTransferir="UPDATE balances SET TotalDisponible = ? WHERE nombreCliente = ?";
 
         try {
             stmt=conexion.prepareStatement(verificarDisponibilidadLogueado);
@@ -550,8 +551,23 @@ public class PaginaInicio extends JFrame {
                     stmt.setString(1, nombreClienteAtransferir);
                     resultSet=stmt.executeQuery();
                     if(resultSet.next()) {
-                        cantidadDisponibleActualTranferir=resultSet.getDouble(1);
-                        System.out.println(cantidadDisponibleActualTranferir);
+                        /*aca se pone monto posterior de la cuenta a transferir + cantidad que se le transfiere*/
+                        cantidadDisponibleActualTranferir=resultSet.getDouble(1)+casteoTransferir;
+                        stmt=conexion.prepareStatement(nuevoSaldoTransferir);
+                        stmt.setDouble(1, cantidadDisponibleActualTranferir);
+                        stmt.setString(2, nombreClienteAtransferir);
+                        cantFilas=stmt.executeUpdate();
+                        if(cantFilas>0) {
+                            JOptionPane.showMessageDialog(null, "transferencia exitosa");
+                            /*si la transferencia es exitosa, descontar el monto de la cueta de origen*/
+                            cantidadDisponibleActualLogueado=resultSet.getDouble(1)-casteoTransferir;
+                            stmt=conexion.prepareStatement(nuevoSaldoLogueado);
+                            stmt.setDouble(1, cantidadDisponibleActualLogueado);
+                            stmt.setString(2, clienteLogueado);
+                            cantFilas=stmt.executeUpdate();
+                        }else {
+                            JOptionPane.showMessageDialog(null, "no pudo realizarse la transferencia. Contactar al banco");
+                        }
                     }
                 }
             }
