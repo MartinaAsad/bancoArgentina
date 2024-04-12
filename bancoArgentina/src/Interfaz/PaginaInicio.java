@@ -49,6 +49,8 @@ public class PaginaInicio extends JFrame {
     private JTextField transferencia_usuario;
     private JTextField transferencia_nroCuenta;
     private JTextField transferencia_cantidad;
+    private JTextField retiros_colocar_nro;
+    private JTextField retiros_colocar_monto;
 	/*Connection conn;
 	ResultSet rs;
 	PreparedStatement pst;*/
@@ -401,6 +403,44 @@ public class PaginaInicio extends JFrame {
         opciones.addTab("Retiros", null, retiros, null);
         retiros.setLayout(null);
 
+        JLabel retiros_nrocuenta = new JLabel("Numero de cuenta:");
+        retiros_nrocuenta.setFont(new Font("Arial", Font.PLAIN, 16));
+        retiros_nrocuenta.setBounds(91, 37, 185, 14);
+        retiros.add(retiros_nrocuenta);
+
+        JLabel retiros_monto = new JLabel("Monto:");
+        retiros_monto.setFont(new Font("Arial", Font.PLAIN, 16));
+        retiros_monto.setBounds(91, 120, 112, 14);
+        retiros.add(retiros_monto);
+
+        retiros_colocar_nro = new JTextField();
+        retiros_colocar_nro.setBounds(284, 36, 86, 20);
+        retiros.add(retiros_colocar_nro);
+        retiros_colocar_nro.setColumns(10);
+
+        retiros_colocar_monto = new JTextField();
+        retiros_colocar_monto.setColumns(10);
+        retiros_colocar_monto.setBounds(284, 114, 86, 20);
+        retiros.add(retiros_colocar_monto);
+
+        JButton retiros_retirar_dinero = new JButton("Retirar dinero");
+        retiros_retirar_dinero.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String usuario=usuario_logueado.getText();
+                String nroCuenta=retiros_colocar_nro.getText();
+                String monto=retiros_colocar_monto.getText();
+
+                int nroCuentaCasteado=Integer.valueOf(nroCuenta);
+                int montoCasteado=Integer.valueOf(monto);
+                if(verificarCuenta(usuario, nroCuentaCasteado)) {
+                    verificarMonto(nroCuentaCasteado, montoCasteado);
+
+                }
+            }
+        });
+        retiros_retirar_dinero.setBounds(455, 259, 127, 23);
+        retiros.add(retiros_retirar_dinero);
+
         JPanel listaClientes = new JPanel();
         opciones.addTab("Lista de clientes", null, listaClientes, null);
         listaClientes.setLayout(null);
@@ -580,4 +620,59 @@ public class PaginaInicio extends JFrame {
 
     }
 
+    public boolean verificarCuenta(String nombreClienteLogueado, int nroCuenta) {
+        //aca se chequea si el numero de cuenta ingresado corresponde al cliente logueado
+        boolean existe=false;
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+
+        String query="SELECT nroCuenta FROM balances WHERE nroCuenta = ? AND nombreCliente = ?";
+
+        try {
+            stmt=conexion.prepareStatement(query);
+            stmt.setInt(1, nroCuenta);
+            stmt.setString(2, nombreClienteLogueado);
+            resultSet=stmt.executeQuery();
+
+            if(resultSet.next()) {
+                existe=true;
+            }
+            return existe;
+
+        }catch(Exception e) {
+            System.out.println(e);
+        }
+
+        return existe;
+
+    }
+
+    public boolean verificarMonto(int nroCuenta, int monto) {
+        //aca se chequea si el numero de cuenta ingresado corresponde al cliente logueado
+        boolean esMenorOIgual=false;
+        PreparedStatement stmt = null;
+        ResultSet resultSet = null;
+        double montoPrevio=0;
+
+        String query="SELECT totalDisponible FROM balances WHERE nroCuenta = ?";
+
+        try {
+            stmt=conexion.prepareStatement(query);
+            stmt.setInt(1, nroCuenta);
+            resultSet=stmt.executeQuery();
+
+            if(resultSet.next()) {
+                montoPrevio=resultSet.getDouble(1);
+                if(montoPrevio>=monto) {
+                    esMenorOIgual=true;
+                }
+            }
+
+        }catch(Exception e) {
+            System.out.println(e);
+        }
+
+        return esMenorOIgual;
+
+    }
 }
