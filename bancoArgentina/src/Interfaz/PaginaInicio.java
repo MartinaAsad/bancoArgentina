@@ -1,5 +1,6 @@
 package Interfaz;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.sql.Connection;
 import java.util.Date;
@@ -13,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import BaseDeDatos.conexion;
+import net.proteanit.sql.DbUtils;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -25,6 +28,10 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.table.DefaultTableModel;
+import java.awt.FlowLayout;
 
 public class PaginaInicio extends JFrame {
 
@@ -51,6 +58,10 @@ public class PaginaInicio extends JFrame {
     private JTextField transferencia_cantidad;
     private JTextField retiros_colocar_nro;
     private JTextField retiros_colocar_monto;
+    private JTable tabla_clientes;
+    private JTable tabla_balance;
+    private JTextField pin_viejo_ingresado;
+    private JTextField pin_nuevo_ingresado;
 	/*Connection conn;
 	ResultSet rs;
 	PreparedStatement pst;*/
@@ -445,6 +456,14 @@ public class PaginaInicio extends JFrame {
         opciones.addTab("Lista de clientes", null, listaClientes, null);
         listaClientes.setLayout(null);
 
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(10, 11, 572, 304);
+        listaClientes.add(scrollPane);
+
+        tabla_clientes = new JTable();
+        scrollPane.setViewportView(tabla_clientes);
+        llenarTablaCliente();
+
         JPanel historial = new JPanel();
         opciones.addTab("Historial", null, historial, null);
         historial.setLayout(null);
@@ -453,9 +472,74 @@ public class PaginaInicio extends JFrame {
         opciones.addTab("Balance", null, balance, null);
         balance.setLayout(null);
 
+        JScrollPane scrollPane_1 = new JScrollPane();
+        scrollPane_1.setBounds(10, 11, 541, 304);
+        balance.add(scrollPane_1);
+
+        tabla_balance = new JTable();
+        scrollPane_1.setViewportView(tabla_balance);
+        //scrollPane.setViewportView(tabla_balance);
+        llenarTablaBalance();
+
         JPanel cambiarPin = new JPanel();
         opciones.addTab("Cambiar pin", null, cambiarPin, null);
         cambiarPin.setLayout(null);
+
+        JLabel pin_viejo = new JLabel("Ingresar pin viejo: ");
+        pin_viejo.setFont(new Font("Arial", Font.PLAIN, 16));
+        pin_viejo.setBounds(71, 51, 172, 25);
+        cambiarPin.add(pin_viejo);
+
+        JLabel pin_nuevo = new JLabel("Ingresar pin nuevo: ");
+        pin_nuevo.setFont(new Font("Arial", Font.PLAIN, 16));
+        pin_nuevo.setBounds(71, 109, 172, 25);
+        cambiarPin.add(pin_nuevo);
+
+        pin_viejo_ingresado = new JTextField();
+        pin_viejo_ingresado.setBounds(324, 55, 86, 20);
+        cambiarPin.add(pin_viejo_ingresado);
+        pin_viejo_ingresado.setColumns(10);
+
+        pin_nuevo_ingresado = new JTextField();
+        pin_nuevo_ingresado.setBounds(324, 113, 86, 20);
+        cambiarPin.add(pin_nuevo_ingresado);
+        pin_nuevo_ingresado.setColumns(10);
+
+        JButton cambiar_pin = new JButton("Cambiar pin");
+        cambiar_pin.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                PreparedStatement stmt = null;
+                ResultSet resultSet = null;
+                int cantFilas = 0;
+                String pin_nuevo = pin_nuevo_ingresado.getText();
+                String pin_viejo = pin_viejo_ingresado.getText();
+
+                int pinN = Integer.valueOf(pin_nuevo);
+                int pinV = Integer.valueOf(pin_viejo);
+                int cantDigitos = (int) Math.floor(Math.log10(Math.abs(pinN)) + 1); // para calcular que el pin nuevo tenga 4 digitos sino que no se actualice
+                try {
+                    String sql = "UPDATE cuenta SET pin = ? WHERE nombreCliente = ?";
+                    if (cantDigitos == 4) {
+                        stmt = conexion.prepareStatement(sql);
+                        stmt.setInt(1, pinN);
+                        stmt.setString(2, usuario_logueado.getText());
+                        cantFilas = stmt.executeUpdate();
+
+                        if (cantFilas > 0) {
+                            JOptionPane.showMessageDialog(null, "Pin actualizado");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "No se pudo actualizar el pin");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "El pin debe tener 4 digitos");
+                    }
+                } catch (Exception e2) {
+                    System.out.println(e2);
+                }
+            }
+        });
+        cambiar_pin.setBounds(335, 210, 128, 23);
+        cambiarPin.add(cambiar_pin);
 
         JLabel texto_fecha = new JLabel("Fecha de hoy:");
         texto_fecha.setBounds(329, 42, 110, 26);
@@ -512,12 +596,7 @@ public class PaginaInicio extends JFrame {
                         //seteo el telefono en el campo para que se visualice
                         telefono.setText(telefonoObtenido);
 
-						/*Date fechaObtenida=resultSet.getDate("fechaNacimiento");
-						//pasar de date (formato original desde la bbdd) para que sea string y pueda visualizarse
-						Date date=new Date();
-						SimpleDateFormat formato=new SimpleDateFormat("yyyy/dd/mm");
-						String fechaConvertida=formato.format(date);
-						fechaNacimiento.setText(fechaConvertida);*/
+
                         resultSet.close();
                         stmt.close();
                     }else {
@@ -620,6 +699,64 @@ public class PaginaInicio extends JFrame {
 
     }
 
+    private DefaultTableModel extraerDatosCliente() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("dni");
+        model.addColumn("fecha de nacimiento");
+        model.addColumn("nombre");
+        model.addColumn("telefono");
+        model.addColumn("direccion");
+        model.addColumn("dinero disponible");
+
+        String query = "SELECT dniCliente, fechaNacimiento, nombreCliente, telefonoCliente, direccionCliente, dineroDisponible FROM cuenta";
+        try (PreparedStatement stmt = conexion.prepareStatement(query);
+             ResultSet resultSet = stmt.executeQuery()) {
+            String[] info = new String[6];
+            while (resultSet.next()) {
+                for (int i = 0; i < info.length; i++) {
+                    info[i] = resultSet.getString(i + 1);
+                }
+                model.addRow(info);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return model;
+    }
+
+    private void llenarTablaCliente() {
+        DefaultTableModel model = extraerDatosCliente();
+        tabla_clientes.setModel(model);
+    }
+
+    private DefaultTableModel extraerDatosBalance() {
+        DefaultTableModel model = new DefaultTableModel();
+        model.addColumn("nombre");
+        model.addColumn("numero de cuenta");
+        model.addColumn("dni");
+        model.addColumn("dinero disponible");
+
+        String query = "SELECT nombreCliente, nroCuenta, dniCliente, dineroDisponible FROM cuenta";
+        try (PreparedStatement stmt = conexion.prepareStatement(query);
+             ResultSet resultSet = stmt.executeQuery()) {
+            String[] info = new String[4];
+            while (resultSet.next()) {
+                for (int i = 0; i < info.length; i++) {
+                    info[i] = resultSet.getString(i + 1);
+                }
+                model.addRow(info);
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return model;
+    }
+
+    private void llenarTablaBalance() {
+        DefaultTableModel model = extraerDatosBalance();
+        tabla_balance.setModel(model);
+    }
+
     public boolean verificarCuenta(String nombreClienteLogueado, int nroCuenta) {
         //aca se chequea si el numero de cuenta ingresado corresponde al cliente logueado
         boolean existe=false;
@@ -647,7 +784,7 @@ public class PaginaInicio extends JFrame {
 
     }
 
-    public boolean verificarMonto(int nroCuenta, int monto) {
+    public boolean verificarMonto(int nroCuenta, int monto) {/*empezar video 20*/
         //aca se chequea si el numero de cuenta ingresado corresponde al cliente logueado
         boolean esMenorOIgual=false;
         PreparedStatement stmt = null;
